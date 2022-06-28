@@ -1,10 +1,8 @@
 import os
 import uuid
-import json
 import shutil
 import ckanapi
 import zipfile
-import logging
 import requests
 import shapefile
 

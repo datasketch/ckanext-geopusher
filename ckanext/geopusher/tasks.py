@@ -1,4 +1,4 @@
-from lib import process
+from ckanext.geopusher.lib import process
 
 import ckanapi
 
