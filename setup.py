@@ -75,11 +75,7 @@ setup(
     # "scripts" keyword. Entry points provide cross-platform support and allow
     # pip to create the appropriate form of executable for the target platform.
     entry_points='''
-        [paste.paster_command]
-        geopusher=ckanext.geopusher.commands:GeopusherCommands
         [ckan.plugins]
         geopusher=ckanext.geopusher.plugin:GeopusherPlugin
-        [ckan.celery_task]
-        tasks=ckanext.geopusher.celery_import:task_imports
     ''',
 )

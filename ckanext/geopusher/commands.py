@@ -10,6 +10,7 @@ from ckan import model
 
 log = logging.getLogger(__name__)
 
+
 class GeopusherCommands(CkanCommand):
     """
     ckanext-geopusher commands:
@@ -24,7 +25,7 @@ class GeopusherCommands(CkanCommand):
 
     parser = paste.script.command.Command.standard_parser(verbose=True)
     parser.add_option('-c', '--config', dest='config',
-        default='development.ini', help='Config file to use.')
+                      default='development.ini', help='Config file to use.')
 
     def command(self):
         if not len(self.args):
@@ -47,11 +48,12 @@ class GeopusherCommands(CkanCommand):
 
     def _convertall(self, ckan):
         for package in ckan.action.package_list():
-            resources = ckan.action.package_show(id=package).get('resources', [])
+            resources = ckan.action.package_show(
+                id=package).get('resources', [])
             for resource in resources:
-                print("converting resource {} for package {}".format(resource['id'], resource['package_id']))
+                print("converting resource {} for package {}".format(
+                    resource['id'], resource['package_id']))
                 self._convert(ckan, resource['id'])
-            
 
     def _convert(self, ckan, resource_id):
         process(ckan, resource_id)

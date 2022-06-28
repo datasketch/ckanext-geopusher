@@ -13,12 +13,14 @@ from subprocess import call
 TEMPDIR = os.path.join(os.path.dirname(__file__), '..', 'tmp')
 OUTDIR = os.path.join(TEMPDIR, 'out')
 
+
 class BadResourceFileException(Exception):
     def __init__(self, extra_msg=None):
         self.extra_msg = extra_msg
 
     def __str__(self):
         return self.extra_msg
+
 
 class FileTooLargeError(Exception):
 
@@ -27,6 +29,7 @@ class FileTooLargeError(Exception):
 
     def __str__(self):
         return self.extra_msg
+
 
 def process(ckan, resource_id):
     if not os.path.isdir(OUTDIR):
@@ -54,11 +57,10 @@ def process(ckan, resource_id):
                 file = shapefile
                 filepath = os.path.join(unzipped_dir, shapefile)
 
-
         res_name = resource['name'].encode('ascii', 'ignore')
         outfile = os.path.join(OUTDIR,
-                              "{0}.{1}".format(res_name.replace('/', ''),
-                              'json'))
+                               "{0}.{1}".format(res_name.replace('/', ''),
+                                                'json'))
 
         convert_file(filepath, outfile)
 
@@ -75,12 +77,13 @@ def process(ckan, resource_id):
             ckan.action.resource_delete(id=res['id'])
 
     ckan.action.resource_create(
-        package_id = resource['package_id'],
-        upload = open(outfile),
-        format = 'GeoJSON',
-        name = resource['name'],
-        url = 'any'
+        package_id=resource['package_id'],
+        upload=open(outfile),
+        format='GeoJSON',
+        name=resource['name'],
+        url='any'
     )
+
 
 def convert_file(input_path, outfile_path):
     if os.path.isfile(outfile_path):
@@ -89,12 +92,13 @@ def convert_file(input_path, outfile_path):
     returncode = call([
         'ogr2ogr', '-f', 'GeoJSON', '-t_srs', 'crs:84',
         outfile_path, input_path
-        ])
+    ])
 
     if returncode == 1:
         raise BadResourceFileException(
             "{0} could not be converted".format(input_path)
         )
+
 
 def download_file(url, file_format):
     if file_format == 'SHP':
@@ -117,6 +121,7 @@ def download_file(url, file_format):
         shutil.copyfileobj(response.raw, out_file)
 
     return tmpname
+
 
 def unzip_file(filepath):
     try:
