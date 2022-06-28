@@ -49,7 +49,7 @@ def process(ckan, resource_id):
                     shapefile = f
 
             if shapefile is None:
-                print "No shapefile found in archive: {0}".format(unzipped_dir)
+                print("No shapefile found in archive: {0}".format(unzipped_dir))
                 return
             else:
                 file = shapefile

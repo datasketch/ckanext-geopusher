@@ -8,15 +8,7 @@ from ckanext.geopusher.tasks import process_resource
 
 
 class GeopusherPlugin(plugins.SingletonPlugin):
-    plugins.implements(plugins.IConfigurer)
-    plugins.implements(plugins.IDomainObjectModification, inherit=True)
-
-    # IConfigurer
-
-    def update_config(self, config_):
-        toolkit.add_template_directory(config_, 'templates')
-        toolkit.add_public_directory(config_, 'public')
-        toolkit.add_resource('fanstatic', 'geopusher')
+    plugins.implements(plugins.IDomainObjectModification)
 
     def notify(self, entity, operation=None):
         if isinstance(entity, model.Resource):
