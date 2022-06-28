@@ -2,7 +2,6 @@ import ckan.lib.jobs as jobs
 import ckan.model as model
 import ckan.plugins as plugins
 import ckan.plugins.toolkit as toolkit
-import pylons.config as config
 from ckan.model.domain_object import DomainObjectOperation
 
 from tasks import process_resource
@@ -27,7 +26,7 @@ class GeopusherPlugin(plugins.SingletonPlugin):
                 # There is a NEW or CHANGED resource. We should check if
                 # it is a shape file and pass it off to Denis's code if
                 # so it can process it
-                site_url = config.get('ckan.site_url', 'http://localhost/')
+                site_url = toolkit.config.get('ckan.site_url', 'http://localhost/')
                 apikey = model.User.get('default').apikey
 
                 jobs.enqueue(process_resource, [resource_id, site_url, apikey])
