@@ -4,7 +4,7 @@ import ckan.plugins as plugins
 import ckan.plugins.toolkit as toolkit
 from ckan.model.domain_object import DomainObjectOperation
 
-from tasks import process_resource
+from ckanext.geopusher.tasks import process_resource
 
 
 class GeopusherPlugin(plugins.SingletonPlugin):
