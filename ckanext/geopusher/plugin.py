@@ -13,12 +13,14 @@ class GeopusherPlugin(plugins.SingletonPlugin):
     def notify(self, entity, operation=None):
         if isinstance(entity, model.Resource):
             resource_id = entity.id
-            # new event is sent, then a changed event.
-            if operation == DomainObjectOperation.changed:
-                # There is a NEW or CHANGED resource. We should check if
-                # it is a shape file and pass it off to Denis's code if
-                # so it can process it
+            state = entity.state
+            file_format = entity.format
+            
+            is_new_or_update = operation in [DomainObjectOperation.new, DomainObjectOperation.changed]
+
+            if is_new_or_update and file_format.upper() == 'SHP' and state != 'deleted':
                 site_url = toolkit.config.get('ckan.site_url', 'http://localhost/')
                 apikey = model.User.get('default').apikey
+                max_resource_size = toolkit.config.get('ckan.max_resource_size', 10)
 
-                jobs.enqueue(process_resource, [resource_id, site_url, apikey])
+                jobs.enqueue(process_resource, [resource_id, site_url, apikey, max_resource_size])

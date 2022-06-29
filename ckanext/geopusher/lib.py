@@ -1,3 +1,4 @@
+import logging
 import os
 import uuid
 import shutil
@@ -8,9 +9,7 @@ import shapefile
 
 from subprocess import call
 
-TEMPDIR = os.path.join(os.path.dirname(__file__), '..', 'tmp')
-OUTDIR = os.path.join(TEMPDIR, 'out')
-
+TEMPDIR = '/tmp'
 
 class BadResourceFileException(Exception):
     def __init__(self, extra_msg=None):
@@ -29,10 +28,7 @@ class FileTooLargeError(Exception):
         return self.extra_msg
 
 
-def process(ckan, resource_id):
-    if not os.path.isdir(OUTDIR):
-        os.makedirs(OUTDIR)
-
+def process(ckan, resource_id, max_resource_size):
     try:
         resource = ckan.action.resource_show(id=resource_id)
         file_format = resource['format'].upper()
@@ -55,10 +51,11 @@ def process(ckan, resource_id):
                 file = shapefile
                 filepath = os.path.join(unzipped_dir, shapefile)
 
-        res_name = resource['name'].encode('ascii', 'ignore')
-        outfile = os.path.join(OUTDIR,
-                               "{0}.{1}".format(res_name.replace('/', ''),
-                                                'json'))
+        res_name = resource['name'].encode('ascii', 'ignore').decode('UTF-8')
+        outfile = os.path.join(
+            TEMPDIR,
+            "{}.{}".format(res_name.replace('/', ''), 'json')
+        )
 
         convert_file(filepath, outfile)
 
@@ -66,7 +63,7 @@ def process(ckan, resource_id):
         print(e.extra_msg)
         return
 
-    if os.path.getsize(outfile) > 20000000:
+    if os.path.getsize(outfile) > max_resource_size:
         raise FileTooLargeError()
 
     package = ckan.action.package_show(id=resource['package_id'])
