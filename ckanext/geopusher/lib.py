@@ -63,7 +63,7 @@ def process(ckan, resource_id, max_resource_size):
         print(e.extra_msg)
         return
 
-    if os.path.getsize(outfile) > max_resource_size:
+    if os.path.getsize(outfile) > int(max_resource_size):
         raise FileTooLargeError()
 
     package = ckan.action.package_show(id=resource['package_id'])
