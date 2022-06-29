@@ -1,8 +1,7 @@
-import logging
+
 import os
 import uuid
 import shutil
-import ckanapi
 import zipfile
 import requests
 import shapefile
@@ -10,6 +9,7 @@ import shapefile
 from subprocess import call
 
 TEMPDIR = '/tmp'
+
 
 class BadResourceFileException(Exception):
     def __init__(self, extra_msg=None):
@@ -45,7 +45,8 @@ def process(ckan, resource_id, max_resource_size):
                     shapefile = f
 
             if shapefile is None:
-                print("No shapefile found in archive: {0}".format(unzipped_dir))
+                print("No shapefile found in archive: {0}".format(
+                    unzipped_dir))
                 return
             else:
                 file = shapefile
@@ -63,7 +64,7 @@ def process(ckan, resource_id, max_resource_size):
         print(e.extra_msg)
         return
 
-    if os.path.getsize(outfile) > int(max_resource_size):
+    if os.path.getsize(outfile) > int(max_resource_size) * 1000000:
         raise FileTooLargeError()
 
     package = ckan.action.package_show(id=resource['package_id'])
