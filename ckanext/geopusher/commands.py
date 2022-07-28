@@ -29,7 +29,7 @@ class GeopusherCommands(CkanCommand):
 
     def command(self):
         if not len(self.args):
-            print self.__doc__
+            print(self.__doc__)
             return
 
         cmd = self.args[0]
@@ -44,7 +44,7 @@ class GeopusherCommands(CkanCommand):
         elif cmd == 'convert':
             self._convert(ckan, self.args[1])
         else:
-            print self.__doc__
+            print(self.__doc__)
 
     def _convertall(self, ckan):
         for package in ckan.action.package_list():
